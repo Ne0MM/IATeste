@@ -1,24 +1,15 @@
-import requests
-import json
-import time
-import threading
-import numpy as np
+import requests, json, time, threading
+import pandas as pd
 
 finalizado = False
-xArray = np.zeros((10))
-yArray = np.zeros((10))
-zArray = np.zeros((10))
-
-print(xArray)
+xArray = [[],[],[],[],[],[],[],[],[],[]]
 
 def getInfo(numero):
     print("Requisição " + str(numero + 1) + " em andamento")
 
     response = requests.get("https://giroscopio.netlify.app/api/gyroData?id=1")
     jsonResponse = json.loads(response.content)
-    xArray[numero] = jsonResponse["x"]
-    yArray[numero] = jsonResponse["y"]
-    zArray[numero] = jsonResponse["z"]
+    xArray[numero] = [jsonResponse["x"], jsonResponse["y"], jsonResponse["z"]]
     print("Requisição " + str(numero + 1) + " finalizada")
 
 for i in range(10):
@@ -26,4 +17,7 @@ for i in range(10):
     time.sleep(0.1)
 
 time.sleep(2)
-print(xArray, yArray, zArray)
+
+data = pd.read_csv("testFile.csv", index_col="id", header=0)
+
+print(data)
